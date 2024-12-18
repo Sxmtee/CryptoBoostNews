@@ -11,7 +11,7 @@ import SwiftUI
 struct CryptoBoostApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SplashScreen()
         }
     }
 }
