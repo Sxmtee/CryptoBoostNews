@@ -1,19 +1,19 @@
 //
-//  LoginScreen.swift
+//  SignUpScreen.swift
 //  CryptoBoost
 //
-//  Created by mac on 18/12/2024.
+//  Created by mac on 03/01/2025.
 //
 
 import SwiftUI
 
-struct LoginScreen: View {
+struct SignUpScreen: View {
     @State private var viewModel = AuthModel()
     @State private var isPasswordVisible = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Login to your\nAccount")
+            Text("Sign up to\nCryptoBoost")
                 .font(.system(size: 40, weight: .bold, design: .rounded))
                 .padding(.bottom, 40)
             
@@ -70,43 +70,33 @@ struct LoginScreen: View {
                 RoundedRectangle(cornerRadius: 15)
                     .strokeBorder(.blue, lineWidth: 1)
             )
-            .padding(.bottom, 15)
-            
-            Button {
-                // code to come
-            } label: {
-                Text("Forgot password ?")
-                    .foregroundStyle(.blue)
-                    .font(.system(size: 20, weight: .medium))
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                    .padding(.bottom, 15)
-            }
+            .padding(.bottom, 50)
             
             CustomButton(
                 action: {},
                 width: .infinity,
-                text: "Login"
+                text: "Sign Up"
             )
             .padding(.bottom, 20)
             
             HStack {
-                Text("Do not have an account?")
+                Text("Already have an account?")
                     .font(.system(size: 17, weight: .light))
                 
                 Button {
                     //code to come
                 } label: {
-                    Text("Sign up")
+                    Text("Login")
                         .font(.system(size: 17, weight: .medium))
                 }
             }
             .frame(maxWidth: .infinity, alignment: .center)
         }
         .padding()
-        .frame(maxHeight: .infinity, alignment: .topLeading)
+        .frame(maxHeight: .infinity,alignment: .topLeading)
     }
 }
 
 #Preview {
-    LoginScreen()
+    SignUpScreen()
 }

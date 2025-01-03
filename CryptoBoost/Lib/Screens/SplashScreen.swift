@@ -6,15 +6,29 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct SplashScreen: View {
     @State private var isActive = false
     @State private var size = 0.5
     @State private var opacity = 0.5
+    @State private var isUserLoggedIn = false
+    @State private var authListener: AuthStateDidChangeListenerHandle?
+    
+    
+    private func checkAuthState() {
+        authListener = Auth.auth().addStateDidChangeListener { auth, user in
+            isUserLoggedIn = user != nil
+        }
+    }
     
     var body: some View {
         if isActive {
-            ContentView()
+            if isUserLoggedIn {
+                ContentView()
+            } else {
+                LoginScreen()
+            }
         } else {
             VStack {
                 VStack {
@@ -35,12 +49,19 @@ struct SplashScreen: View {
                 }
             }
             .onAppear {
+                checkAuthState()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                     withAnimation {
                         self.isActive = true
                     }
                 }
             }
+            .onDisappear {
+                if let listener = authListener {
+                    Auth.auth().removeStateDidChangeListener(listener)
+                }
+            }
+
         }
     }
 }
