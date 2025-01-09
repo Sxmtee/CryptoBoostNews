@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var viewModel = NewsView()
+    @State private var authModel = AuthModel()
     
     var body: some View {
         NavigationStack {
@@ -51,6 +52,15 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Crypto News")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Log out", systemImage: "rectangle.portrait.and.arrow.right") {
+                        Task {
+                            await authModel.logout()
+                        }
+                    }
+                }
+            }
             .task {
                 await viewModel.fetchNews()
             }

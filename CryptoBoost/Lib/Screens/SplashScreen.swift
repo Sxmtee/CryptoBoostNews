@@ -27,7 +27,7 @@ struct SplashScreen: View {
             if isUserLoggedIn {
                 ContentView()
             } else {
-                LoginScreen()
+                AuthScreen()
             }
         } else {
             VStack {

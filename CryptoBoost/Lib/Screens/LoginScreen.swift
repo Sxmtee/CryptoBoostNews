@@ -10,10 +10,11 @@ import SwiftUI
 struct LoginScreen: View {
     @State private var viewModel = AuthModel()
     @State private var isPasswordVisible = false
+    @Environment(AuthNavigator.self) private var navigator
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Login to your\nAccount")
+            Text("Login to your Account")
                 .font(.system(size: 40, weight: .bold, design: .rounded))
                 .padding(.bottom, 40)
             
@@ -83,7 +84,11 @@ struct LoginScreen: View {
             }
             
             CustomButton(
-                action: {},
+                action: {
+                    Task {
+                        await viewModel.login()
+                    }
+                },
                 width: .infinity,
                 text: "Login"
             )
@@ -94,7 +99,7 @@ struct LoginScreen: View {
                     .font(.system(size: 17, weight: .light))
                 
                 Button {
-                    //code to come
+                    navigator.switchToSignup()
                 } label: {
                     Text("Sign up")
                         .font(.system(size: 17, weight: .medium))
@@ -104,6 +109,15 @@ struct LoginScreen: View {
         }
         .padding()
         .frame(maxHeight: .infinity, alignment: .topLeading)
+        .snackbar(
+            isShowing: $viewModel.showErrorSnackbar,
+            message: viewModel.error ?? ""
+        )
+        .snackbar(
+            isShowing: $viewModel.showSuccessSnackbar,
+            message: viewModel.successMessage ?? "",
+            isSuccess: true
+        )
     }
 }
 
