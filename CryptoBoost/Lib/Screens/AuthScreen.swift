@@ -9,18 +9,23 @@ import SwiftUI
 
 struct AuthScreen: View {
     @State private var navigator = AuthNavigator()
+    @State private var authModel = AuthModel()
     
     var body: some View {
-        NavigationStack {
-            Group {
-                switch navigator.currentScreen {
-                case .login:
-                    LoginScreen()
-                case .signup:
-                    SignUpScreen()
+        if authModel.isUserLoggedIn {
+            ContentView()
+        } else {
+            NavigationStack {
+                Group {
+                    switch navigator.currentScreen {
+                    case .login:
+                        LoginScreen()
+                    case .signup:
+                        SignUpScreen()
+                    }
                 }
+                .environment(navigator)
             }
-            .environment(navigator)
         }
     }
 }

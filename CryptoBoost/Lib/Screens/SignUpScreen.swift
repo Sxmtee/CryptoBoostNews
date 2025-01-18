@@ -18,75 +18,32 @@ struct SignUpScreen: View {
                 .font(.system(size: 40, weight: .bold, design: .rounded))
                 .padding(.bottom, 40)
             
-            Text("Name")
-                .font(.system(size: 20, weight: .medium))
-                .padding(.bottom, 5)
-            
-            TextField("", text: $viewModel.name, prompt: Text("enter your name"))
-                .keyboardType(.namePhonePad)
-                .autocapitalization(.none)
-                .textFieldStyle(.plain)
-                .padding(15)
-                .background(
-                    RoundedRectangle(cornerRadius: 15)
-                        .strokeBorder(.blue, lineWidth: 1)
-                )
-                .padding(.bottom, 15)
-            
-            Text("Email")
-                .font(.system(size: 20, weight: .medium))
-                .padding(.bottom, 5)
-            
-            TextField("", text: $viewModel.email, prompt: Text("enter your email"))
-                .keyboardType(.emailAddress)
-                .autocapitalization(.none)
-                .textFieldStyle(.plain)
-                .padding(15)
-                .background(
-                    RoundedRectangle(cornerRadius: 15)
-                        .strokeBorder(.blue, lineWidth: 1)
-                )
-                .padding(.bottom, 15)
-            
-            Text("Password")
-                .font(.system(size: 20, weight: .medium))
-                .padding(.bottom, 5)
-            
-            ZStack {
-                if isPasswordVisible {
-                    TextField(
-                        "",
-                        text: $viewModel.password,
-                        prompt: Text("enter your password")
-                    )
-                    .textFieldStyle(.plain)
-                    .padding(15)
-                } else {
-                    SecureField(
-                        "",
-                        text: $viewModel.password,
-                        prompt: Text("enter your password")
-                    )
-                    .textFieldStyle(.plain)
-                    .padding(15)
-                }
-                
-                HStack {
-                    Spacer()
-                    Button{
-                        isPasswordVisible.toggle()
-                    } label: {
-                        Image(systemName: isPasswordVisible ? "eye.slash.fill" : "eye.fill")
-                            .foregroundColor(.gray)
-                    }
-                    .padding(.trailing, 15)
-                }
-            }
-            .background(
-                RoundedRectangle(cornerRadius: 15)
-                    .strokeBorder(.blue, lineWidth: 1)
+            TextAreas(
+                text: $viewModel.name,
+                title: "Name",
+                hintText: "Enter your full name",
+                icon: "person"
             )
-            .padding(.bottom, 50)
+            .padding(.bottom, 15)
+            
+            TextAreas(
+                text: $viewModel.email,
+                title: "Email",
+                hintText: "Enter your email address",
+                icon: "mail"
+            )
+            .keyboardType(.emailAddress)
+            .textInputAutocapitalization(.never)
+            .padding(.bottom, 15)
+            
+            TextAreas(
+                text: $viewModel.password,
+                title: "Password",
+                hintText: "Enter your password",
+                icon: "lock.fill",
+                isSecureField: true
+            )
+            .padding(.bottom, 30)
             
             CustomButton(
                 action: {
@@ -97,7 +54,10 @@ struct SignUpScreen: View {
                 width: .infinity,
                 text: "Sign Up"
             )
-            .padding(.bottom, 20)
+            .disabled(!formIsValid)
+            .opacity(formIsValid ? 1.0 : 0.5)
+            
+            Spacer()
             
             HStack {
                 Text("Already have an account?")
@@ -126,6 +86,15 @@ struct SignUpScreen: View {
     }
 }
 
+extension SignUpScreen: AuthenticationFormProtocol {
+    var formIsValid: Bool {
+        return viewModel.isEmailValid
+        && viewModel.isPasswordValid
+        && viewModel.isNameValid
+    }
+}
+
 #Preview {
     SignUpScreen()
+        .environment(AuthNavigator())
 }

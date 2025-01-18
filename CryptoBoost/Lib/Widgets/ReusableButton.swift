@@ -47,9 +47,9 @@ struct CustomButton: View {
         }
         .frame(width: width, height: height)
         .background(backgroundColor)
-        .cornerRadius(5)
+        .cornerRadius(8)
         .overlay(
-            RoundedRectangle(cornerRadius: 5)
+            RoundedRectangle(cornerRadius: 8)
                 .stroke(borderColor, lineWidth: 1)
         )
     }

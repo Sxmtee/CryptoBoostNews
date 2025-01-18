@@ -23,7 +23,7 @@ import Foundation
 //}
 
 
-struct Article: Codable, Identifiable {
+struct Article: Codable, Identifiable, Hashable {
     var id = UUID()
     let title: String
     let image: String

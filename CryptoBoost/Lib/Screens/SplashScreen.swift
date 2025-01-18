@@ -12,19 +12,11 @@ struct SplashScreen: View {
     @State private var isActive = false
     @State private var size = 0.5
     @State private var opacity = 0.5
-    @State private var isUserLoggedIn = false
-    @State private var authListener: AuthStateDidChangeListenerHandle?
-    
-    
-    private func checkAuthState() {
-        authListener = Auth.auth().addStateDidChangeListener { auth, user in
-            isUserLoggedIn = user != nil
-        }
-    }
+    @State private var authModel = AuthModel()
     
     var body: some View {
         if isActive {
-            if isUserLoggedIn {
+            if authModel.isUserLoggedIn {
                 ContentView()
             } else {
                 AuthScreen()
@@ -49,7 +41,7 @@ struct SplashScreen: View {
                 }
             }
             .onAppear {
-                checkAuthState()
+                authModel.checkAuthState()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                     withAnimation {
                         self.isActive = true
@@ -57,7 +49,7 @@ struct SplashScreen: View {
                 }
             }
             .onDisappear {
-                if let listener = authListener {
+                if let listener = authModel.authListener {
                     Auth.auth().removeStateDidChangeListener(listener)
                 }
             }

@@ -10,6 +10,11 @@ import Combine
 import FirebaseAuth
 import Firebase
 
+protocol AuthenticationFormProtocol {
+    var formIsValid: Bool { get }
+}
+
+@MainActor
 @Observable
 class AuthModel {
     var name = "" {
@@ -42,6 +47,15 @@ class AuthModel {
         }
     }
     
+    var isUserLoggedIn = false
+    var authListener: AuthStateDidChangeListenerHandle?
+    
+    func checkAuthState() {
+        authListener = Auth.auth().addStateDidChangeListener { auth, user in
+            self.isUserLoggedIn = user != nil
+        }
+    }
+    
     func clearFields() {
         name = ""
         email = ""
@@ -56,6 +70,7 @@ class AuthModel {
     private var cancellables = Set<AnyCancellable>()
     
     init() {
+        checkAuthState()
         validateName()
         validateEmail()
         validatePassword()
@@ -100,9 +115,11 @@ class AuthModel {
             
             isLoading = false
             successMessage = "Account created successfully!"
+            isUserLoggedIn = true
             clearFields()
         } catch let error as NSError {
             isLoading = false
+            isUserLoggedIn = false
             
             switch error.code {
             case AuthErrorCode.emailAlreadyInUse.rawValue:
@@ -132,9 +149,11 @@ class AuthModel {
 
             isLoading = false
             successMessage = "Logged In successfully!"
+            isUserLoggedIn = true
             clearFields()
         } catch let error as NSError {
             isLoading = false
+            isUserLoggedIn = false
             
             switch error.code {
             case AuthErrorCode.wrongPassword.rawValue:
@@ -179,6 +198,7 @@ class AuthModel {
             try Auth.auth().signOut()
             isLoading = false
             successMessage = "Logged out successfully!"
+            isUserLoggedIn = false
             clearFields()
         } catch {
             isLoading = false

@@ -19,7 +19,7 @@ struct ContentView: View {
                     ProgressView("Loading...")
                 case .loaded:
                     List(viewModel.articles) { article in
-                        NavigationLink(destination: NewsDetail(article: article)) {
+                        NavigationLink(value: article) {
                             VStack(alignment: .leading, spacing: 10) {
                                 Text(article.title)
                                     .font(.headline)
@@ -52,6 +52,9 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Crypto News")
+            .navigationDestination(for: Article.self) { article in
+                NewsDetail(article: article)
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Log out", systemImage: "rectangle.portrait.and.arrow.right") {
